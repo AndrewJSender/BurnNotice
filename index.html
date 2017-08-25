@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Burn Notice</title>
+        <link rel="stylesheet" type="text/css" href="css/burnnotice.css" />
+        <script src="js/burnnotice.js"></script>
+    </head>
+    <body>
+        <div id="topMenu" style="text-align: center; height: 200px">
+            <h1>Burn Notice</h1>
+            <h2>
+                By Andrew Sender
+                <br/>
+                <a href="mailto:asender@lgsinnovations.com">ASender@LGSInnovations.com</a>
+            </h2>
+            <h3>If a picture is worth a thousand words, then it's only worth 32 thousand bits <br/> #notgoodenough</h3>
+        </div>
+        <div style="float: left; width: 225px; height:100%;">
+            <button id="showCredentialsDisplayButton" onclick="displayMainDiv('credentialsDiv')">Edit ESXi Server IP Address & Credentials</button>
+            <div>
+                <button id="selectAllButton" onclick="selectAllItems();">Select All</button>
+                </br>
+                <button id="createRouterButton" onclick="createItem('router')">Create Router</button>
+                <button id="createSwitchButton" onclick="createItem('switch')">Create Switch</button>
+                <button id="createVmNicButton"  onclick="createItem('vmnic')" disabled>Create Physical Network Adapter</button>
+                <br/>
+                <button id="importFile" onclick="importFile('config')" disabled>Import SR-OS Config File</button><input name="importConfigFileInput" type="file" style="display: none" onchange="analyzeConfigFiles(this)"/>
+                <br/>
+                <button id="editButton" onclick="editItem()">Edit Item</button>
+                <br/>
+                <button id="deleteButton" onclick="deleteItem()">Delete Item(s)</button>
+                <br/>
+                <button id="linkItemButton" onclick="toggleLinkMode()">Link Item(s)</button><p id="linkModeP"><p>
+            </div>
+            <hr/>
+            <table>
+                <tr>
+                    <td/>
+                    <td>
+                        <button onclick="shiftSvg('up')">up</button>
+                    </td>
+                    <td/>
+                </tr>
+                <tr id="centerRow">
+                    <td>
+                        <button onclick="shiftSvg('left')">left</button>
+                    </td>
+                    <td>
+                        <button onclick="scaleSvg('in')">+</button>
+                        <br/>
+                        <button onclick="scaleSvg('out')">-</button>
+                    </td>
+                    <td>
+                        <button onclick="shiftSvg('right')">right</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td/>
+                    <td>
+                        <button onclick="shiftSvg('down')">down</button>
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <button onclick="scaleSvg('reset');shiftSvg('reset');">Reset</button>
+            <hr/>
+            <div>
+                <button id="openSvgButton" onclick="importFile('svg')">Open SVG</button><input name="importSvgFileInput" type="file" style="display: none" onchange="importSvgFile(this)"/>
+                <br/><br/>
+                <button id="downloadButton" onclick="submitForm('download')">Download SVG</button>
+                <br/><br/>
+                <button id="deployButton" onclick="submitForm('deploy')">Deploy to ESXi Server</button>
+            </div>
+        </div>
+        <div id="credentialsDiv" style="position: absolute; left: 250px; top: 225px; border: thin solid black; display: " >
+            <form id="svgForm" action="cgi/burnnotice.pl" method="post">
+                <input name="svgInput" style="display: none">
+                <input name="submissionType" style="display: none">
+                <p> Please provide ESXi hostname or IP address and Credentials for SSH login.  The credentials will not be logged/stored anywhere<p>
+                <br/>
+                <table>
+                    <tr>
+                        <td>IP Address:</td>
+                        <td><input name="esxiHost" type="text" size="50" placeholder="Ex. grande.gcl.lgsdirect.com"/></td>
+                    </tr>
+                    <tr>
+                        <td>Resource Path:</td>
+                        <td><input name="esxiPath" type="text" size="50" placeholder="Ex. /ASender/BurnNotice"/></td>
+                    </tr>
+                    <tr>
+                        <td>Username:</td>
+                        <td><input name="esxiUser" type="text" size="50" placeholder ="Ex. asender"/></td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td><input name="esxiPass" type="password" size="50"/></td>
+                    </tr>
+                </table>
+                <br/>
+            </form>
+                <button onclick="displayMainDiv('svgDiv')">Close Credential Window/Return to Network Design</button>
+                <br/>
+                <br/>
+                 Suggested ESXi Servers:
+                <table border="1">
+                    <tr>
+                        <th>Host Name</th>
+                        <th>IP Addres</th>
+                    </tr>
+                    <tr>
+                        <td>grande.gcl.lgsdirect.com</td>
+                        <td>10.209.140.37</td>
+                    </tr>
+                    <tr>
+                        <td>huracan.gcl.lgsdirect.com</td>
+                        <td>10.209.142.113</td>
+                    </tr>
+                    <tr>
+                        <td>lightning.gcl.lgsdirect.com</td>
+                        <td>10.209.142.96</td>
+                    </tr>
+                    <tr>
+                        <td>metalgear.gcl.lgsdirect.com</td>
+                        <td>10.209.140.38</td>
+                    </tr>
+                    <tr>
+                        <td>turbo.gcl.lgsdirect.com</td>
+                        <td>10.209.142.3</td>
+                    </tr>
+                </table>
+                <br/>
+        </div>
+        <div id="editRouterDiv" style="position: absolute; left: 250px; top: 225px; border: thin solid black; display: none">
+            <h3>Cards</h3>
+            Number of Cards:<input name="numCards" type="text" onchange="changeNumCards(this)" value="2" placeholder="0 - 10"/>
+            <br/>
+            Include Card B CPM:<input name="isCardB" type="checkbox" onchange="changeCardB(this)" value="1"/>
+            <table id="editRouterCardsTable" border="1">
+                <tr id="editCardHeaderRow">
+                    <th>Slot</th>
+                    <th>Card Type</th>
+                    <th>MDA 1 Type</th>
+                    <th>MDA 2 Type</th>
+                </tr>
+                <tr id="editCard1Row">
+                    <td>1</td>
+                    <td>
+                        <select name="card1Type" onchange="changeCardType(this)">
+                            <option value="iom-v">iom-v</option>
+                            <option value="iom-v-mg">iom-v-mg</option>
+                            <option value="cpm-v">cpm-v</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="card1Mda1Type" onchange="changeMdaType(this)">
+                            <option value="m20-v">m20-v</option>
+                            <option value="isa-mg-v">isa-mg-v</option>
+                            <option value="isa-ipsmg-v">isa-ipsmg-v</option>
+                            <option value="isa-aa-v">isa-aa-v</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="card1Mda2Type" onchange="changeMdaType(this)">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <button onclick="displayMainDiv('svgDiv')">Close Edit Router Window/Return to Network Design</button>
+        </div>
+        <div id="svgDiv" style="position: absolute; left: 250px; top: 225px; border: thin solid black; display: none">
+            <svg id="svgId" width="2000px" height="1000px" xmlns="http://www.w3.org/2000/svg" onclick="determineDeselect(evt)" onload="loadSVG(this)" oncontextmenu="return false;" transform="matrix(1 0 0 1 0 0)">
+                <circle cx="0" cy="0" r="5" stroke="black" stroke-width="3" fill="black" />
+            </svg>
+        </div>
+        <div id="bottomDiv" style="position: absolute;">
+            <h4>Bugs to Fix:</h4>
+                <ul>
+                    </li>
+                </ul>
+            <h4>Features to Add:</h4>
+                <ul>
+                    <li>Deploying Multiple Hosts</li>
+                    <li>IP Address Assigning</li>
+                    <li>VM per 7750 Card</lI>
+                    
+                </ul>
+        </div>
+    </body>
+</html>

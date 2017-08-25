@@ -1,0 +1,10 @@
+<Item>
+    <rasd:AddressOnParent>7</rasd:AddressOnParent>
+    <rasd:AutomaticAllocation>true</rasd:AutomaticAllocation>
+    <rasd:Connection>Experimental Network 1</rasd:Connection>
+    <rasd:ElementName>Ethernet 1</rasd:ElementName>
+    <rasd:InstanceID>8</rasd:InstanceID>
+    <rasd:ResourceSubType>E1000</rasd:ResourceSubType>
+    <rasd:ResourceType>10</rasd:ResourceType>
+    <vmw:Config ovf:required="false" vmw:key="wakeOnLanEnabled" vmw:value="true" />
+</Item>
